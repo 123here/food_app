@@ -2,38 +2,47 @@ import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
 class AddOrderPlanScreen extends StatefulWidget {
-  const AddOrderPlanScreen({super.key});
+  const AddOrderPlanScreen({super.key}); // Constructor for the AddOrderPlanScreen class
 
   @override
-  _AddOrderPlanScreenState createState() => _AddOrderPlanScreenState();
+  _AddOrderPlanScreenState createState() => _AddOrderPlanScreenState(); // Create state for the screen
 }
 
 class _AddOrderPlanScreenState extends State<AddOrderPlanScreen> {
+   // List of food items to be displayed
   List<Map<String, dynamic>> foodItems = [];
+   // Map to store selected food items and their quantities
   Map<String, int> selectedItems = {};
+  // Variable to store the total cost of selected items
   double totalCost = 0.0;
+  // Controllers for managing the date and target cost input fields
   final _dateController = TextEditingController();
   final _targetCostController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+     // Fetch food items from the database when the screen initializes
     fetchFoodItems();
   }
 
   Future<void> fetchFoodItems() async {
+    // Fetch food items from the database
     final data = await DatabaseHelper.instance.getFoodItems();
     setState(() {
+      // Store the fetched food items in the state
       foodItems = data;
     });
   }
 
+   // Update the quantity of a selected food item
   void updateQuantity(Map<String, dynamic> item, bool increment) {
     setState(() {
-      int currentQuantity = selectedItems[item['name']] ?? 0;
-      double itemCost = item['cost'];
+      int currentQuantity = selectedItems[item['name']] ?? 0; // Get current quantity of the item
+      double itemCost = item['cost']; // Cost of the selected food item
 
       if (increment) {
+        // If increment is true, try to add the item to the order
         if (totalCost + itemCost <= double.parse(_targetCostController.text)) {
           selectedItems[item['name']] = currentQuantity + 1;
           totalCost += itemCost;
@@ -43,6 +52,7 @@ class _AddOrderPlanScreenState extends State<AddOrderPlanScreen> {
           );
         }
       } else {
+         // If decrement is true, decrease the quantity if it's greater than 0
         if (currentQuantity > 0) {
           selectedItems[item['name']] = currentQuantity - 1;
           totalCost -= itemCost;
@@ -50,7 +60,7 @@ class _AddOrderPlanScreenState extends State<AddOrderPlanScreen> {
       }
     });
   }
-
+   // Save the order plan to the database
   Future<void> saveOrderPlan() async {
     if (_dateController.text.isEmpty || selectedItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,17 +68,17 @@ class _AddOrderPlanScreenState extends State<AddOrderPlanScreen> {
       );
       return;
     }
-
+    // Prepare a string of food items with their quantities
     String foodNames = selectedItems.entries
         .map((e) => '${e.key} x${e.value}')
         .join(', ');
-
+    //Save order plan in database
     await DatabaseHelper.instance.addOrderPlan(
       _dateController.text,
       foodNames,
       totalCost,
     );
-
+     /// Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Order plan saved successfully!')),
     );
@@ -77,6 +87,7 @@ class _AddOrderPlanScreenState extends State<AddOrderPlanScreen> {
   }
 
   @override
+  // padding and allignment for the text fields
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
