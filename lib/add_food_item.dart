@@ -6,15 +6,17 @@ class AddFoodItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // controller for adding and manging input fields
     final _nameController = TextEditingController();
     final _costController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Food Item'),
-        backgroundColor: Colors.teal,
+        title: const Text('Add Food Item'), // Title Screen
+        backgroundColor: Colors.teal, // background Color
       ),
       body: Padding(
+        // Allging the padding and allgiment to the box
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,9 +67,12 @@ class AddFoodItemScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () async {
+                // Get the food name and cost from the input fields
                 final name = _nameController.text.trim();
                 final cost = double.tryParse(_costController.text.trim());
 
+                
+                // Validate inputs: Check if name is empty or cost is invalid
                 if (name.isEmpty || cost == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -79,7 +84,7 @@ class AddFoodItemScreen extends StatelessWidget {
                 }
 
                 await DatabaseHelper.instance.addFoodItem(name, cost);
-
+                 // Add the food item to the database
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Food item added successfully.'),
