@@ -1,16 +1,7 @@
-# food_app
+# This is a food app In Flutter
+To allows users to generate an order plan based on the date and a target cost User is able to add food until he read the target cost once there he can't add more since he has reached the target quota for the date. He is also able to query to see what he did for that and is able to update the data and delete it. 
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Steps to use
+1. Install Flutter and dart
+3. Download the code from Github
+4. Run the code 
