@@ -23,7 +23,8 @@ class DatabaseHelper {
       onCreate: _createDB,
     );
   }
-
+  
+  // create table for food items and the order plan
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE food_items (
@@ -46,6 +47,7 @@ class DatabaseHelper {
     await _insertInitialFoodItems(db);
   }
 
+  // Intialized 20 options for food choice
   Future<void> _insertInitialFoodItems(Database db) async {
     List<Map<String, dynamic>> initialFoodItems = [
       {'name': 'HotDog', 'cost': 10.0},
@@ -102,17 +104,18 @@ class DatabaseHelper {
     );
   }
 
-  // Add, Delete, Update Food Items
+  // Add food items
   Future<int> addFoodItem(String name, double cost) async {
     final db = await instance.database;
     return await db.insert('food_items', {'name': name, 'cost': cost});
   }
-
+ // delete food items
   Future<int> deleteFoodItem(int id) async {
     final db = await instance.database;
     return await db.delete('food_items', where: 'id = ?', whereArgs: [id]);
   }
 
+  // update the food items 
   Future<int> updateFoodItem(int id, String name, double cost) async {
     final db = await instance.database;
     return await db.update(
@@ -123,11 +126,14 @@ class DatabaseHelper {
     );
   }
 
+  // delete the order plan from query
   Future<int> deleteOrderPlan(int id) async {
     final db = await instance.database;
     return await db.delete('order_plan', where: 'id = ?', whereArgs: [id]);
   }
 
+
+  // update the order plan
   Future<int> updateOrderPlan(
       int id, String date, String foodItems, double totalCost) async {
     final db = await instance.database;
