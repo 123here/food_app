@@ -4,4 +4,5 @@ To allows users to generate an order plan based on the date and a target cost Us
 ## Steps to use
 1. Install Flutter and dart
 3. Download the code from Github
-4. Run the code 
+4. Run the code
+5. The code you can see in the Lib
