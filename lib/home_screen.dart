@@ -8,11 +8,14 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
+  // title on the top
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Food App'),
       ),
+
+      //padding and alloignemnt
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
@@ -20,6 +23,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisSpacing: 16.0,
           mainAxisSpacing: 16.0,
           children: [
+            // button for add order plan
             _buildGridButton(
               context,
               title: 'Add Order Plan',
@@ -32,6 +36,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
+            // button to go to query plan
             _buildGridButton(
               context,
               title: 'Query Order Plan',
@@ -44,6 +49,7 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
+            //button to go to add food item section
             _buildGridButton(
               context,
               title: 'Add Food Item',
@@ -68,6 +74,7 @@ class HomeScreen extends StatelessWidget {
     required Color color,
     required VoidCallback onPressed,
   }) {
+  // color and allignment for button
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
