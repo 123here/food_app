@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
+// Stateful widget to display and query order plans
 class QueryOrderPlanScreen extends StatefulWidget {
   const QueryOrderPlanScreen({super.key});
 
@@ -9,37 +10,43 @@ class QueryOrderPlanScreen extends StatefulWidget {
 }
 
 class _QueryOrderPlanScreenState extends State<QueryOrderPlanScreen> {
+  // TextEditingController for handling the input date
   final _dateController = TextEditingController();
+    // List to store queried order plans
   List<Map<String, dynamic>> orderPlans = [];
 
+  // Method to query order plans by date from the database
   Future<void> queryOrderPlan() async {
+    // Check if the date field is empty
     if (_dateController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a date.')),
       );
       return;
     }
-
+    // Fetch data from the database based on the entered date
     final data = await DatabaseHelper.instance.getOrderPlanByDate(_dateController.text);
     setState(() {
-      orderPlans = data;
+      orderPlans = data; // Update the list of order plans
     });
-
+    // Show a message if no data is found for the given date
     if (data.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No order plans found for the selected date.')),
       );
     }
   }
-
+   // Method to delete an order plan by ID
   Future<void> deleteOrderPlan(int id) async {
+     // Delete the order plan using the database helper
     await DatabaseHelper.instance.deleteOrderPlan(id);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order plan deleted successfully.')),
+      const SnackBar(content: Text('Order plan deleted successfully.')), // Confirmation message
     );
     queryOrderPlan(); // Refresh the list
   }
 
+  // Method to update an existing order plan by navigating to the update screen
   Future<void> updateOrderPlan(Map<String, dynamic> orderPlan) async {
     final updatedPlan = await Navigator.push(
       context,
@@ -47,7 +54,7 @@ class _QueryOrderPlanScreenState extends State<QueryOrderPlanScreen> {
         builder: (context) => UpdateOrderPlanScreen(orderPlan: orderPlan),
       ),
     );
-
+   // If the update is successful, refresh the list and show a success message
     if (updatedPlan != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Order plan updated successfully.')),
@@ -156,8 +163,9 @@ class _QueryOrderPlanScreenState extends State<QueryOrderPlanScreen> {
       ),
     );
   }
-}
+} 
 
+// Screen for updating an existing order plan
 class UpdateOrderPlanScreen extends StatefulWidget {
   final Map<String, dynamic> orderPlan;
 
@@ -168,24 +176,26 @@ class UpdateOrderPlanScreen extends StatefulWidget {
 }
 
 class _UpdateOrderPlanScreenState extends State<UpdateOrderPlanScreen> {
-  final _dateController = TextEditingController();
-  final _foodItemsController = TextEditingController();
-  final _totalCostController = TextEditingController();
+  final _dateController = TextEditingController();  // Controller for date
+  final _foodItemsController = TextEditingController(); // Controller for food item
+  final _totalCostController = TextEditingController(); // Controller for total cost
 
   @override
   void initState() {
+     // Initialize text fields with current values
     super.initState();
     _dateController.text = widget.orderPlan['date'];
     _foodItemsController.text = widget.orderPlan['food_items'];
     _totalCostController.text = widget.orderPlan['total_cost'].toString();
   }
-
+  
+  // Method to update the order plan in the database
   Future<void> updateOrderPlan() async {
     await DatabaseHelper.instance.updateOrderPlan(
-      widget.orderPlan['id'],
-      _dateController.text,
-      _foodItemsController.text,
-      double.parse(_totalCostController.text),
+      widget.orderPlan['id'], // Updated ID
+      _dateController.text, // Updated date
+      _foodItemsController.text, // Updated food items
+      double.parse(_totalCostController.text), // Updated food cost
     );
 
     Navigator.pop(context, true); // Return to the query screen
